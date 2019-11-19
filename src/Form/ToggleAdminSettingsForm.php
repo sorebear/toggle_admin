@@ -26,26 +26,50 @@ class ToggleAdminSettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('toggle_admin.settings');
 
-    $form['toggle_enabled'] = [
+    $form['toggle_enabled'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Enable Toggle Controls'),
       '#description' => $this->t('This enables or disables the module functionality.'),
       '#default_value' => $config->get('toggle_enabled') ?: FALSE,
-    ];
+    );
 
-    $form['default_on'] = [
+    $form['default_on'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Show Admin Menu By Default'),
       '#description' => $this->t('Should the admin menu be shown by default on initial page load.'),
       '#default_value' => $config->get('default_on') ?: FALSE,
-    ];
+    );
 
-    $form['enable_for_users'] = [
+    $form['enabled_buttons'] = array(
+      '#type' => 'fieldset',
+      '#title' => $this->t('Enabled Buttons'),
+    );
+
+    $form['enabled_buttons']['enable_edit'] = array(
+      '#type' => 'checkbox',
+      '#title' => $this->t('Edit'),
+      '#default_value' => $config->get('enable_edit') !== NULL ? $config->get('enable_edit') : TRUE,
+    );
+    
+    $form['enabled_buttons']['enable_clear_cache'] = array(
+      '#type' => 'checkbox',
+      '#title' => $this->t('Clear Cache'),
+      '#default_value' => $config->get('enable_clear_cache') !== NULL ? $config->get('enable_clear_cache') : TRUE,
+    );
+
+
+    $form['enabled_buttons']['enable_logs'] = array(
+      '#type' => 'checkbox',
+      '#title' => $this->t('Recent Logs'),
+      '#default_value' => $config->get('enable_logs') !== NULL ? $config->get('enable_logs') : TRUE,
+    );
+
+    $form['enable_for_users'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Specific User List'),
       '#description' => $this->t('Include only the users who should see the toggle admin controls. Seperate different users with a ",". If left blank, it will be enabled for all authenticated users.'),
       '#default_value' => $config->get('enable_for_users') ?: $this->t(''),
-    ];
+    );
 
     return parent::buildForm($form, $form_state);
   }
@@ -59,6 +83,9 @@ class ToggleAdminSettingsForm extends ConfigFormBase {
 
     $config->set('toggle_enabled', $values['toggle_enabled']);
     $config->set('default_on', $values['default_on']);
+    $config->set('enable_clear_cache', $values['enable_clear_cache']);
+    $config->set('enable_edit', $values['enable_edit']);
+    $config->set('enable_logs', $values['enable_logs']);
     $config->set('enable_for_users', $values['enable_for_users']);
     $config->save();
 

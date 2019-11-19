@@ -13,6 +13,12 @@ function toggle_admin_page_attachments_alter(array &$page) {
     $page['#attached']['drupalSettings']['toggleAdmin']['nodeId'] = $node->id();
   }
 
+  $page['#attached']['drupalSettings']['toggleAdmin']['enabledButtons'] = array(
+    'clearCache' => $config->get('enable_clear_cache'),
+    'edit' => $config->get('enable_edit'),
+    'logs' => $config->get('enable_logs'),
+  );
+
   // Check who the current user is
   $user = \Drupal::currentUser();
   $isAuthUser = $user->isAuthenticated();

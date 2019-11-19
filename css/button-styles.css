@@ -6,7 +6,22 @@
   z-index: 1000;
 }
 
-button.admin-control-button {
+.admin-control-buttons-container:hover::before {
+  content: '';
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  bottom: -15px;
+  left: -15px;
+}
+
+.admin-control-buttons-container.dragging,
+.admin-control-buttons-container.dragging button {
+  cursor: grabbing;
+}
+
+button.admin-control-button,
+a.admin-control-button {
   outline: none;
   background-color: #555;
   transition: background-color .15s;
@@ -14,7 +29,7 @@ button.admin-control-button {
   border-radius: 50%;
   padding: 5px;
   font-size: 24px;
-  margin: 0 5px;
+  margin: 5px;
   height: 60px;
   width: 60px;
   display: flex;
@@ -22,12 +37,34 @@ button.admin-control-button {
   align-items: center;
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.4);
   border: none;
+  position: relative;
+  z-index: 2;
 }
 
-button.admin-control-button:hover {
+button.admin-control-button.settings,
+a.admin-control-button.settings {
+  position: absolute;
+  height: 30px;
+  width: 30px;
+  font-size: 16px;
+  bottom: calc(100% - 50px);
+  left: calc(100% - 50px);
+  transition: transform .3s;
+  z-index: 1;
+}
+
+.admin-control-buttons-container:not(.dragging):hover button.admin-control-button.settings,
+.admin-control-buttons-container:not(.dragging):hover a.admin-control-button.settings {
+  transition-delay: 1s;
+  transform: translate(30px, -30px);
+}
+
+button.admin-control-button:hover,
+a.admin-control-button:hover {
   background-color: #999;
 }
 
-button.admin-control-button:active {
+button.admin-control-button:active,
+a.admin-control-button:active {
   background-color: #777;
 }

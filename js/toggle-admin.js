@@ -1,6 +1,7 @@
 function ToggleAdmin() {
   this.body = document.querySelector('body');
   this.nodeId = drupalSettings.toggleAdmin && drupalSettings.toggleAdmin.nodeId;
+  this.enabledButtons = drupalSettings.toggleAdmin ? drupalSettings.toggleAdmin.enabledButtons : {};
   this.buttonContainer = document.createElement('div');
   this.clearCacheButton = document.querySelector('a[data-drupal-link-system-path="admin/flush"]');
   this.dragging = false;
@@ -29,25 +30,48 @@ function ToggleAdmin() {
   this.createButtons = function() {
     var that = this;
 
-    if (this.nodeId) {
-      this.createButton(['edit-page'], ['fas', 'fa-pencil-alt'], 'Edit Page', function() {
-        window.location = '/node/' + that.nodeId + '/edit';
+    console.log(this.enabledButtons);
+
+    if (this.nodeId && this.enabledButtons.edit) {
+      this.createButton(['edit-page'], ['fas', 'fa-pencil-alt'], 'Edit Page', '/node/' + that.nodeId + '/edit');
+    }
+
+    if (this.enabledButtons.clearCache) {
+      this.createButton(['clear-cash'], ['fas', 'fa-trash'], 'Clear Cache', function() {
+        that.clearCacheButton.click();
       });
     }
 
-    this.createButton(['clear-cash'], ['fas', 'fa-trash'], 'Clear Cache', function() {
-      that.clearCacheButton.click();
-    });
+    if (this.enabledButtons.logs) {
+      this.createButton(['recent-logs'], ['fas', 'fa-list-alt'], 'Recent Logs', '/admin/reports/dblog');
+    }
 
     this.createButton(['admin-toggle'], ['fas', 'fa-bars'], 'Toggle Admin Menu', function() {
       that.body.classList.toggle('toggle-admin');
     });
+
+    this.createButton(['settings'], ['fas', 'fa-cog'], 'Toggle Admin Settings', '/admin/config/user-interface/toggle-admin');
   }
 
   this.createButton = function(classes, iconClasses, name, onClick) {
     var that = this;
-    var button = document.createElement('button');
-    button.classList.add('admin-control-button')
+    var button = null;
+
+    if (typeof(onClick) === 'function') {
+      button = document.createElement('button');
+      button.addEventListener('click', function() {
+        if (that.dragging) {
+          that.dragging = false;
+        } else {
+          onClick();
+        }
+      });
+    } else {
+      button = document.createElement('a');
+      button.href = onClick;
+    }
+    
+    button.classList.add('admin-control-button');
     button.name = name;
     
     for (var i = 0; i < classes.length; i += 1) {
@@ -60,13 +84,6 @@ function ToggleAdmin() {
     }
 
     button.appendChild(icon);
-    button.addEventListener('click', function() {
-      if (that.dragging) {
-        that.dragging = false;
-      } else {
-        onClick();
-      }
-    });
     this.buttonContainer.appendChild(button);
   }
 
@@ -77,6 +94,7 @@ function ToggleAdmin() {
     this.buttonContainer.addEventListener('mousemove', function(e) { 
       // Check if the left mouse button is down
       if (e.buttons === 1) {
+        that.buttonContainer.classList.add('dragging');
         // Don't start the drag funcionality until it's been dragged 5 pixels
         // This helps prevent small accidental dragging
         if (x > 5 || y > 5 || x < -5 || y < -5) {
@@ -93,6 +111,7 @@ function ToggleAdmin() {
     });
 
     this.buttonContainer.addEventListener('mouseup', function() {
+      that.buttonContainer.classList.remove('dragging');
       x = 0;
       y = 0;
     });
