@@ -50,6 +50,8 @@ a.admin-control-button.settings {
   bottom: calc(100% - 50px);
   left: calc(100% - 50px);
   transition: transform .3s;
+  transform-style: preserve-3d;
+  transform: translate(0, 0);
   z-index: 1;
 }
 
