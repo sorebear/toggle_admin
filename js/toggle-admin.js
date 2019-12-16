@@ -102,6 +102,7 @@ function ToggleAdmin() {
     
     button.classList.add('admin-control-button');
     button.name = name;
+    button.setAttribute('aria-label', name);
     button.title = keyShortcut ? name + ' (' + keyShortcut + ')' : name;
     
     for (var i = 0; i < classes.length; i += 1) {
