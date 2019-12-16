@@ -40,6 +40,17 @@ class ToggleAdminSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('default_on') ?: FALSE,
     );
 
+    $form['default_position'] = array(
+      '#type' => 'select',
+      '#title' => $this->t('Default Position'),
+      '#required' => TRUE,
+      '#default_value' => $config->get('default_position') ?: 'bottom-right',
+      '#options' => [
+        'bottom-left' => 'Bottom Left',
+        'bottom-right' => 'Bottom Right',
+      ],
+    );
+
     $form['enabled_buttons'] = array(
       '#type' => 'fieldset',
       '#title' => $this->t('Enabled Buttons'),
@@ -88,6 +99,7 @@ class ToggleAdminSettingsForm extends ConfigFormBase {
 
     $config->set('toggle_enabled', $values['toggle_enabled']);
     $config->set('default_on', $values['default_on']);
+    $config->set('default_position', $values['default_position']);
     $config->set('enable_clear_cache', $values['enable_clear_cache']);
     $config->set('enable_run_cron', $values['enable_run_cron']);
     $config->set('enable_edit', $values['enable_edit']);

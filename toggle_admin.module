@@ -37,5 +37,11 @@ function toggle_admin_page_attachments_alter(array &$page) {
     } else {
       $page['#attached']['library'][] = 'toggle_admin/default_off';
     }
+
+    if ($config->get('default_position') == 'bottom-left') {
+      $page['#attached']['library'][] = 'toggle_admin/default_bottom_left';
+    } else {
+      $page['#attached']['library'][] = 'toggle_admin/default_bottom_right';
+    }
   }
 }
