@@ -47,20 +47,20 @@ class ToggleAdminSettingsForm extends ConfigFormBase {
 
     $form['enabled_buttons']['enable_edit'] = array(
       '#type' => 'checkbox',
-      '#title' => $this->t('Edit'),
+      '#title' => $this->t('Edit (Alt + E)'),
       '#default_value' => $config->get('enable_edit') !== NULL ? $config->get('enable_edit') : TRUE,
     );
     
     $form['enabled_buttons']['enable_clear_cache'] = array(
       '#type' => 'checkbox',
-      '#title' => $this->t('Clear Cache'),
+      '#title' => $this->t('Clear Cache (Alt + C)'),
       '#default_value' => $config->get('enable_clear_cache') !== NULL ? $config->get('enable_clear_cache') : TRUE,
     );
 
 
     $form['enabled_buttons']['enable_logs'] = array(
       '#type' => 'checkbox',
-      '#title' => $this->t('Recent Logs'),
+      '#title' => $this->t('Recent Logs (Alt + L)'),
       '#default_value' => $config->get('enable_logs') !== NULL ? $config->get('enable_logs') : TRUE,
     );
 

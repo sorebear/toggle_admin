@@ -21,8 +21,23 @@ function ToggleAdmin() {
     var that = this;
     document.addEventListener('keydown', function(e) {
       // Action on "alt + c"      
-      if (e.keyCode === 67 && e.altKey) {
+      if (e.keyCode === 67 && e.altKey && that.enabledButtons.clearCache) {
         that.clearCacheButton.click();
+      }
+
+      // Action on "alt + e"
+      if (e.keyCode === 69 && e.altKey && that.nodeId && that.enabledButtons.edit) {
+        window.location = '/node/' + that.nodeId + '/edit';
+      }
+
+      // Action on "alt + l"
+      if (e.keyCode === 76 && e.altKey && that.enabledButtons.logs) {
+        window.location = '/admin/reports/dblog';
+      }
+
+      // Action on "alt + t"
+      if (e.keyCode === 84 && e.altKey) {
+        that.body.classList.toggle('toggle-admin');
       }
     });
   }
@@ -30,30 +45,28 @@ function ToggleAdmin() {
   this.createButtons = function() {
     var that = this;
 
-    console.log(this.enabledButtons);
-
     if (this.nodeId && this.enabledButtons.edit) {
       this.createButton(['edit-page'], ['fas', 'fa-pencil-alt'], 'Edit Page', '/node/' + that.nodeId + '/edit');
     }
 
     if (this.enabledButtons.clearCache) {
-      this.createButton(['clear-cash'], ['fas', 'fa-trash'], 'Clear Cache', function() {
+      this.createButton(['clear-cash'], ['fas', 'fa-trash'], 'Clear Cache', 'Alt + C', function() {
         that.clearCacheButton.click();
       });
     }
 
     if (this.enabledButtons.logs) {
-      this.createButton(['recent-logs'], ['fas', 'fa-list-alt'], 'Recent Logs', '/admin/reports/dblog');
+      this.createButton(['recent-logs'], ['fas', 'fa-list-alt'], 'Recent Logs', 'Alt + L', '/admin/reports/dblog');
     }
 
-    this.createButton(['admin-toggle'], ['fas', 'fa-bars'], 'Toggle Admin Menu', function() {
+    this.createButton(['admin-toggle'], ['fas', 'fa-bars'], 'Toggle Admin Menu', 'Alt + T', function() {
       that.body.classList.toggle('toggle-admin');
     });
 
-    this.createButton(['settings'], ['fas', 'fa-cog'], 'Toggle Admin Settings', '/admin/config/user-interface/toggle-admin');
+    this.createButton(['settings'], ['fas', 'fa-cog'], 'Toggle Admin Settings', '', '/admin/config/user-interface/toggle-admin');
   }
 
-  this.createButton = function(classes, iconClasses, name, onClick) {
+  this.createButton = function(classes, iconClasses, name, keyShortcut, onClick) {
     var that = this;
     var button = null;
 
@@ -73,6 +86,7 @@ function ToggleAdmin() {
     
     button.classList.add('admin-control-button');
     button.name = name;
+    button.title = keyShortcut ? name + ' (' + keyShortcut + ')' : name;
     
     for (var i = 0; i < classes.length; i += 1) {
       button.classList.add(classes[i]);
