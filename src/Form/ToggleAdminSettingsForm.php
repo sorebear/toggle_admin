@@ -57,6 +57,11 @@ class ToggleAdminSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('enable_clear_cache') !== NULL ? $config->get('enable_clear_cache') : TRUE,
     );
 
+    $form['enabled_buttons']['enable_run_cron'] = array(
+      '#type' => 'checkbox',
+      '#title' => $this->t('Run CRON (Alt + R)'),
+      '#default_value' => $config->get('enable_run_cron') !== NULL ? $config->get('enable_run_cron') : TRUE,
+    );
 
     $form['enabled_buttons']['enable_logs'] = array(
       '#type' => 'checkbox',
@@ -84,6 +89,7 @@ class ToggleAdminSettingsForm extends ConfigFormBase {
     $config->set('toggle_enabled', $values['toggle_enabled']);
     $config->set('default_on', $values['default_on']);
     $config->set('enable_clear_cache', $values['enable_clear_cache']);
+    $config->set('enable_run_cron', $values['enable_run_cron']);
     $config->set('enable_edit', $values['enable_edit']);
     $config->set('enable_logs', $values['enable_logs']);
     $config->set('enable_for_users', $values['enable_for_users']);

@@ -17,6 +17,7 @@ function toggle_admin_page_attachments_alter(array &$page) {
     'clearCache' => $config->get('enable_clear_cache'),
     'edit' => $config->get('enable_edit'),
     'logs' => $config->get('enable_logs'),
+    'cron' => $config->get('enable_run_cron'),
   );
 
   // Check who the current user is

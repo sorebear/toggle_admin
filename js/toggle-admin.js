@@ -4,6 +4,7 @@ function ToggleAdmin() {
   this.enabledButtons = drupalSettings.toggleAdmin ? drupalSettings.toggleAdmin.enabledButtons : {};
   this.buttonContainer = document.createElement('div');
   this.clearCacheButton = document.querySelector('a[data-drupal-link-system-path="admin/flush"]');
+  this.runCronButton = document.querySelector('a[data-drupal-link-system-path="run-cron"]');
   this.dragging = false;
   this.bottom = 20;
   this.right = 20;
@@ -15,6 +16,36 @@ function ToggleAdmin() {
     this.createButtons();
     this.addKeyboardListeners();
     this.addDragFunctionality();
+  }
+
+  this.createButtons = function() {
+    var that = this;
+
+    if (this.nodeId && this.enabledButtons.edit) {
+      this.createButton(['edit-page'], ['fas', 'fa-pencil-alt'], 'Edit Page', '/node/' + that.nodeId + '/edit');
+    }
+
+    if (this.enabledButtons.clearCache) {
+      this.createButton(['clear-cash'], ['fas', 'fa-trash'], 'Clear Cache', 'Alt + C', function() {
+        that.clearCacheButton.click();
+      });
+    }
+
+    if (this.enabledButtons.cron) {
+      this.createButton(['run-cron'], ['fas', 'fa-clock'], 'Run CRON', 'Alt + R', function() {
+        that.runCronButton.click();
+      });
+    }
+
+    if (this.enabledButtons.logs) {
+      this.createButton(['recent-logs'], ['far', 'fa-list-alt'], 'Recent Logs', 'Alt + L', '/admin/reports/dblog');
+    }
+
+    this.createButton(['admin-toggle'], ['fas', 'fa-bars'], 'Toggle Admin Menu', 'Alt + T', function() {
+      that.body.classList.toggle('toggle-admin');
+    });
+
+    this.createButton(['settings'], ['fas', 'fa-cog'], 'Toggle Admin Settings', '', '/admin/config/user-interface/toggle-admin');
   }
 
   this.addKeyboardListeners = function() {
@@ -35,35 +66,16 @@ function ToggleAdmin() {
         window.location = '/admin/reports/dblog';
       }
 
+      // Action on "alt + r"
+      if (e.keyCode === 82 && e.altKey && that.enabledButtons.cron) {
+        that.runCronButton.click();
+      }
+
       // Action on "alt + t"
       if (e.keyCode === 84 && e.altKey) {
         that.body.classList.toggle('toggle-admin');
       }
     });
-  }
-
-  this.createButtons = function() {
-    var that = this;
-
-    if (this.nodeId && this.enabledButtons.edit) {
-      this.createButton(['edit-page'], ['fas', 'fa-pencil-alt'], 'Edit Page', '/node/' + that.nodeId + '/edit');
-    }
-
-    if (this.enabledButtons.clearCache) {
-      this.createButton(['clear-cash'], ['fas', 'fa-trash'], 'Clear Cache', 'Alt + C', function() {
-        that.clearCacheButton.click();
-      });
-    }
-
-    if (this.enabledButtons.logs) {
-      this.createButton(['recent-logs'], ['fas', 'fa-list-alt'], 'Recent Logs', 'Alt + L', '/admin/reports/dblog');
-    }
-
-    this.createButton(['admin-toggle'], ['fas', 'fa-bars'], 'Toggle Admin Menu', 'Alt + T', function() {
-      that.body.classList.toggle('toggle-admin');
-    });
-
-    this.createButton(['settings'], ['fas', 'fa-cog'], 'Toggle Admin Settings', '', '/admin/config/user-interface/toggle-admin');
   }
 
   this.createButton = function(classes, iconClasses, name, keyShortcut, onClick) {
