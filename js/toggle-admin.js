@@ -82,6 +82,10 @@ function ToggleAdmin() {
     } else {
       button = document.createElement('a');
       button.href = onClick;
+
+      if (name === 'Recent Logs') {
+        button.target = '_blank';
+      }
     }
     
     button.classList.add('admin-control-button');
