@@ -22,7 +22,7 @@ function ToggleAdmin() {
     var that = this;
 
     if (this.nodeId && this.enabledButtons.edit) {
-      this.createButton(['edit-page'], ['fas', 'fa-pencil-alt'], 'Edit Page', '/node/' + that.nodeId + '/edit');
+      this.createButton(['edit-page'], ['fas', 'fa-pencil-alt'], 'Edit Page', 'Alt + E', '/node/' + that.nodeId + '/edit');
     }
 
     if (this.enabledButtons.clearCache) {
