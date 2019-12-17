@@ -13,6 +13,8 @@ function toggle_admin_page_attachments_alter(array &$page) {
     $page['#attached']['drupalSettings']['toggleAdmin']['nodeId'] = $node->id();
   }
 
+  $page['#attached']['drupalSettings']['toggleAdmin']['toggleLocalTasks'] = $config->get('toggle_local_tasks');
+
   $page['#attached']['drupalSettings']['toggleAdmin']['enabledButtons'] = array(
     'clearCache' => $config->get('enable_clear_cache'),
     'edit' => $config->get('enable_edit'),
@@ -33,9 +35,17 @@ function toggle_admin_page_attachments_alter(array &$page) {
 
   if ($isEnabled && !$isAdminPage && $isAuthUser && $enabledForUser) {
     if ($config->get('default_on')) {
-      $page['#attached']['library'][] = 'toggle_admin/default_on';
+      if ($config->get('toggle_local_tasks')) {
+        $page['#attached']['library'][] = 'toggle_admin/default_on_w_local_tasks';
+      } else {
+        $page['#attached']['library'][] = 'toggle_admin/default_on';
+      }
     } else {
-      $page['#attached']['library'][] = 'toggle_admin/default_off';
+      if ($config->get('toggle_local_tasks')) {
+        $page['#attached']['library'][] = 'toggle_admin/default_off_w_local_tasks';
+      } else {
+        $page['#attached']['library'][] = 'toggle_admin/default_off';
+      }
     }
 
     if ($config->get('default_position') == 'bottom-left') {

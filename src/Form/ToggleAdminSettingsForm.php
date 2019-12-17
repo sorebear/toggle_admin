@@ -33,6 +33,13 @@ class ToggleAdminSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('toggle_enabled') ?: FALSE,
     );
 
+    $form['toggle_local_tasks'] = array(
+      '#type' => 'checkbox',
+      '#title' => $this->t('Toggle Local Tasks'),
+      '#description' => $this->t('Toggle local tasks toolbar when toggling the admin menu.'),
+      '#default_value' => $config->get('toggle_local_tasks') ?: FALSE,
+    );
+
     $form['default_on'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Show Admin Menu By Default'),
@@ -98,6 +105,7 @@ class ToggleAdminSettingsForm extends ConfigFormBase {
     $values = $form_state->getValues();
 
     $config->set('toggle_enabled', $values['toggle_enabled']);
+    $config->set('toggle_local_tasks', $values['toggle_local_tasks']);
     $config->set('default_on', $values['default_on']);
     $config->set('default_position', $values['default_position']);
     $config->set('enable_clear_cache', $values['enable_clear_cache']);

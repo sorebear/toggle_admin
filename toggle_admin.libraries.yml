@@ -16,6 +16,24 @@ default_on:
   js:
     js/toggle-admin.js: {}
 
+default_off_w_local_tasks:
+  version: 1.x
+  css:
+    theme:
+      css/button-styles.css: {}
+      css/default-off-w-local-tasks.css: {}
+  js:
+    js/toggle-admin.js: {}
+
+default_on_w_local_tasks:
+  version: 1.x
+  css:
+    theme:
+      css/button-styles.css: {}
+      css/default-on-w-local-tasks.css: {}
+  js:
+    js/toggle-admin.js: {}
+
 default_bottom_right:
   version: 1.x
   css:

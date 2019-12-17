@@ -1,6 +1,7 @@
 function ToggleAdmin() {
   this.body = document.querySelector('body');
   this.nodeId = drupalSettings.toggleAdmin && drupalSettings.toggleAdmin.nodeId;
+  this.toggleLocalTasks = drupalSettings.toggleLocalTasks;
   this.enabledButtons = drupalSettings.toggleAdmin ? drupalSettings.toggleAdmin.enabledButtons : {};
   this.buttonContainer = document.createElement('div');
   this.clearCacheButton = document.querySelector('a[data-drupal-link-system-path="admin/flush"]');
@@ -42,10 +43,18 @@ function ToggleAdmin() {
     }
 
     this.createButton(['admin-toggle'], ['fas', 'fa-bars'], 'Toggle Admin Menu', 'Alt + T', function() {
-      that.body.classList.toggle('toggle-admin');
+      that.toggleAdmin();
     });
 
     this.createButton(['settings'], ['fas', 'fa-cog'], 'Toggle Admin Settings', '', '/admin/config/user-interface/toggle-admin');
+  }
+
+  this.toggleAdmin = function() {
+    this.body.classList.toggle('toggle-admin');
+    
+    if (this.toggleLocalTasks) {
+      this.body.classList.toggle('toggle-local-tasks');
+    }
   }
 
   this.addKeyboardListeners = function() {
@@ -73,7 +82,7 @@ function ToggleAdmin() {
 
       // Action on "alt + t"
       if (e.keyCode === 84 && e.altKey) {
-        that.body.classList.toggle('toggle-admin');
+        that.toggleAdmin();
       }
     });
   }

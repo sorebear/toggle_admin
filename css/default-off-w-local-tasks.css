@@ -1,0 +1,9 @@
+body:not(.toggle-admin) #toolbar-administration,
+body:not(.toggle-admin) .block-local-tasks-block {
+  display: none !important;
+}
+
+body:not(.toggle-admin) {
+  margin: 0 !important;
+  padding-top: 0 !important;
+}
