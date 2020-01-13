@@ -3,11 +3,37 @@
 function toggle_admin_page_attachments_alter(array &$page) {
   $config = \Drupal::config('toggle_admin.settings');
 
-  // Check if we're on an Admin page
-  $route = \Drupal::routeMatch();
-  $path = $route->getRouteObject()->getPath();
-  $isAdminPage = strpos($path, '/admin') !== false;
+  // Exit if toggle admin controls are not enabled
+  $isEnabled = $config->get('toggle_enabled');
+  if (!$isEnabled) {
+    return;
+  }
+  
+  // Exit if current route is an Admin page
+  $isAdminPage = \Drupal::service('router.admin_context')->isAdminRoute();
+  if ($isAdminPage) {
+    return;
+  }
 
+  // Check who the current user is
+  $user = \Drupal::currentUser();
+  $isAuthUser = $user->isAuthenticated();
+  $username = $user->getDisplayName();
+
+  // Exit if the current user is not authenticated
+  if (!$isAuthUser) {
+    return;
+  }
+
+  // Exit if specific user enabling is set and 
+  // the settings are not enabled for the current user
+  $enabledUsers = array_map('trim', explode(",", $config->get('enable_for_users')));
+  $enabledForUser = $enabledUsers[0] == '' || in_array($username, $enabledUsers, true);
+  if (!$enabledForUser) {
+    return;
+  }
+  
+  $route = \Drupal::routeMatch();
   $node = $route->getParameter('node');
   if ($node) {
     $page['#attached']['drupalSettings']['toggleAdmin']['nodeId'] = $node->id();
@@ -22,36 +48,23 @@ function toggle_admin_page_attachments_alter(array &$page) {
     'cron' => $config->get('enable_run_cron'),
   );
 
-  // Check who the current user is
-  $user = \Drupal::currentUser();
-  $isAuthUser = $user->isAuthenticated();
-  $username = $user->getDisplayName();
-
-  // Check if the settings are enabled for the current user
-  // or if no user restrictions are set
-  $isEnabled = $config->get('toggle_enabled');
-  $enabledUsers = array_map('trim', explode(",", $config->get('enable_for_users')));
-  $enabledForUser = $enabledUsers[0] == '' || in_array($username, $enabledUsers, true);
-
-  if ($isEnabled && !$isAdminPage && $isAuthUser && $enabledForUser) {
-    if ($config->get('default_on')) {
-      if ($config->get('toggle_local_tasks')) {
-        $page['#attached']['library'][] = 'toggle_admin/default_on_w_local_tasks';
-      } else {
-        $page['#attached']['library'][] = 'toggle_admin/default_on';
-      }
+  if ($config->get('default_on')) {
+    if ($config->get('toggle_local_tasks')) {
+      $page['#attached']['library'][] = 'toggle_admin/default_on_w_local_tasks';
     } else {
-      if ($config->get('toggle_local_tasks')) {
-        $page['#attached']['library'][] = 'toggle_admin/default_off_w_local_tasks';
-      } else {
-        $page['#attached']['library'][] = 'toggle_admin/default_off';
-      }
+      $page['#attached']['library'][] = 'toggle_admin/default_on';
     }
-
-    if ($config->get('default_position') == 'bottom-left') {
-      $page['#attached']['library'][] = 'toggle_admin/default_bottom_left';
+  } else {
+    if ($config->get('toggle_local_tasks')) {
+      $page['#attached']['library'][] = 'toggle_admin/default_off_w_local_tasks';
     } else {
-      $page['#attached']['library'][] = 'toggle_admin/default_bottom_right';
+      $page['#attached']['library'][] = 'toggle_admin/default_off';
     }
+  }
+
+  if ($config->get('default_position') == 'bottom-left') {
+    $page['#attached']['library'][] = 'toggle_admin/default_bottom_left';
+  } else {
+    $page['#attached']['library'][] = 'toggle_admin/default_bottom_right';
   }
 }
